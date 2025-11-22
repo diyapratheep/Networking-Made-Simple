@@ -49,9 +49,7 @@ This project requires a **Linux environment** (like Ubuntu running inside Virtua
 Set your VM's network adapter to:
 
 ```
-
 Bridged Mode
-
 ```
 
 This ensures the VM receives a valid IP address on your local network.
@@ -63,13 +61,9 @@ This ensures the VM receives a valid IP address on your local network.
 Run these commands:
 
 ```bash
-
 sudo apt update
-
 sudo apt install python3 python3-pip -y
-
 pip install scapy
-
 ```
 
 ---
@@ -79,16 +73,12 @@ pip install scapy
 Enable packet forwarding in Linux:
 
 ```bash
-
-# Sets the ip_forward kernel setting to 1 (ON)
-
 echo 1 | sudo tee /proc/sys/net/ipv4/ip_forward
-
 ```
 
 ---
 
-## 🐍 How to Run the Tool
+##  How to Run the Tool
 
 The tool uses **two separate terminal windows**:
 
@@ -98,19 +88,18 @@ The tool uses **two separate terminal windows**:
 
 ---
 
-## 🟦 Terminal 1: The Attack Loop (Spoofing)
+##  Terminal 1: The Attack Loop (Spoofing)
 
 This script **must run continuously** to maintain the man-in-the-middle position.
 
 ```bash
-
 sudo python3 arp_spoof.py
 
 ```
 
 ---
 
-## 🟩 Terminal 2: The Monitoring Loop (Sniffing)
+##  Terminal 2: The Monitoring Loop (Sniffing)
 
 Open a Python shell with root privileges:
 
@@ -125,11 +114,7 @@ Then enter:
 ```python
 
 import scapy.all as scapy
-
 from arp_spoof import process_packet
-
-# Sniff unencrypted HTTP traffic (Port 80)
-
 scapy.sniff(filter="tcp port 80", prn=process_packet, store=0)
 
 ```
@@ -138,7 +123,7 @@ This listens for redirected traffic coming through your machine.
 
 ---
 
-## 📘 What You Learn From This Project
+##  What You Learn From This Project
 
 * How ARP works and why it's insecure
 
