@@ -1,5 +1,5 @@
 
-### **  Real-Time "Traffic Light" Latency Monitor (CLI Tool)**
+###   Real-Time "Traffic Light" Latency Monitor (CLI Tool)
 
 A Python command-line application designed to diagnose network bottlenecks by providing a color-coded health status across three distinct network tiers.
 
@@ -13,4 +13,3 @@ A Python command-line application designed to diagnose network bottlenecks by pr
 
     -   Demonstrated proficiency in **network diagnostics** and **Layer 3 (IP) analysis** by creating a decisive, color-coded metric for operational health.
 
-* * * * *
