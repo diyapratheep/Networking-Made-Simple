@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IP Traffic Simulator </title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fb;
+        }
+        .ip-input {
+            transition: all 0.2s;
+            border-color: #e5e7eb;
+        }
+        .ip-input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+        }        .binary-string {
+            font-family: 'Roboto Mono', monospace;
+            white-space: pre; 
+            display: block;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-start md:items-center justify-center p-4">
+
+    <div class="w-full max-w-4xl bg-white shadow-2xl rounded-xl p-6 md:p-10 border border-gray-100">
+
+        <h1 class="text-3xl font-extrabold text-gray-900 mb-2 border-b pb-2">
+            🚦 IP Traffic Cop Simulator (v1.1)
+        </h1>
+        <p class="text-gray-500 mb-6">
+            Simulates the routing decision using CIDR Notation and visualizes the Bitwise AND.
+        </p>
+
+        <!-- Configuration Section -->
+        <div class="grid md:grid-cols-3 gap-6 mb-8 p-4 bg-blue-50 rounded-lg border border-blue-200">
+            <div class="col-span-3">
+                <h2 class="text-xl font-semibold text-blue-800 mb-2">1. Local Network Configuration</h2>
+                <p class="text-sm text-blue-600">This defines your network's boundaries using CIDR.</p>
+            </div>
+            
+            <div>
+                <label for="localIp" class="block text-sm font-medium text-gray-700">Your Local IP</label>
+                <input type="text" id="localIp" value="192.168.1.150" placeholder="e.g., 192.168.1.150" class="mt-1 block w-full px-3 py-2 border rounded-md ip-input">
+            </div>
+            <div>
+                <label for="cidrPrefix" class="block text-sm font-medium text-gray-700">CIDR Prefix (e.g., /24)</label>
+                <input type="number" id="cidrPrefix" value="24" min="1" max="31" placeholder="e.g., 24" class="mt-1 block w-full px-3 py-2 border rounded-md ip-input">
+            </div>
+            <div>
+                <label for="defaultGateway" class="block text-sm font-medium text-gray-700">Default Gateway</label>
+                <input type="text" id="defaultGateway" value="192.168.1.1" placeholder="e.g., 192.168.1.1" class="mt-1 block w-full px-3 py-2 border rounded-md ip-input">
+            </div>
+        </div>
+
+        <!-- Destination & Action Section -->
+        <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">2. Destination & Simulation</h2>
+            <div class="flex flex-col md:flex-row gap-4">
+                <div class="flex-grow">
+                    <label for="destinationIp" class="block text-sm font-medium text-gray-700">Destination IP to Test</label>
+                    <input type="text" id="destinationIp" value="8.8.8.8" placeholder="e.g., 192.168.1.100 or 8.8.8.8" class="mt-1 block w-full px-3 py-2 border rounded-md ip-input">
+                </div>
+                <div class="flex-shrink-0 md:self-end">
+                    <button id="simulateButton" onclick="simulateRouting()" class="w-full md:w-auto mt-6 md:mt-1 font-bold bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-6 rounded-lg shadow-md transition duration-150 ease-in-out">
+                        Simulate Routing Decision
+                    </button>
+                </div>
+            </div>
+        </div>
+
+       
+        
+        <!-- Results Section -->
+        <div id="resultsArea" class="mt-8 p-6 bg-white rounded-xl border-4 border-dashed border-gray-300 transition-all duration-300">
+            <h2 class="text-2xl font-bold text-gray-700 mb-3">Result & Analysis</h2>
+            
+            <div id="statusContainer" class="p-3 mb-4 bg-gray-100 rounded-lg">
+                <span class="text-lg font-semibold text-gray-500">Status:</span>
+                <span id="statusOutput" class="text-lg font-bold text-gray-700">Awaiting Simulation...</span>
+            </div>
+
+            <p class="text-gray-700 mb-2">
+                <span class="font-semibold text-sm mr-2 text-indigo-500">SUBNET MASK:</span>
+                <code id="subnetMaskOutput" class="bg-gray-200 p-1 rounded text-sm text-gray-800">N/A</code>
+            </p>
+            <p class="text-gray-700 mb-2">
+                <span class="font-semibold text-sm mr-2 text-indigo-500">LOCAL NETWORK ID:</span>
+                <code id="localNetworkId" class="bg-gray-200 p-1 rounded text-sm text-gray-800">N/A</code>
+            </p>
+            <p class="text-gray-700 mb-4">
+                <span class="font-semibold text-sm mr-2 text-indigo-500">DESTINATION NETWORK ID:</span>
+                <code id="destinationNetworkId" class="bg-gray-200 p-1 rounded text-sm text-gray-800">N/A</code>
+            </p>
+
+            <p id="decisionText" class="text-gray-600 leading-relaxed italic">
+                Enter your network settings and a destination IP, then click 'Simulate Routing Decision' to see how your device decides where to send the packet.
+            </p>
+        </div>
+         <!-- Binary Visualization Section-->
+        <div id="binaryVisualContainer" class="mt-8 p-6 bg-yellow-50 rounded-xl border border-yellow-300">
+            <h3 class="text-xl font-bold text-yellow-800 mb-3"> Bitwise AND Operation </h3>
+            <div id="binaryVisualization" class="text-sm font-mono space-y-2">
+                <p class="text-yellow-700">Awaiting successful simulation...</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function ipToLong(ip) {
+            const parts = ip.split('.');
+            let long = 0;
+            long += (parseInt(parts[0], 10) << 24) >>> 0;
+            long += (parseInt(parts[1], 10) << 16) >>> 0;
+            long += (parseInt(parts[2], 10) << 8) >>> 0;
+            long += parseInt(parts[3], 10) >>> 0;
+            return long;
+        }
+        function longToIp(long) {
+            const part1 = (long >>> 24) & 0xFF; // Shift right 2
+            const part2 = (long >>> 16) & 0xFF; 
+            const part3 = (long >>> 8) & 0xFF;
+            const part4 = long & 0xFF;
+            return `${part1}.${part2}.${part3}.${part4}`;
+        }
+
+        
+        function cidrToLongMask(cidr) {
+            if (cidr < 1 || cidr > 31) return 0;
+
+            return (0xFFFFFFFF << (32 - cidr)) >>> 0;
+        }
+
+        function longToBinaryString(long, cidr = null) {
+            let bin = long.toString(2).padStart(32, '0');
+            if (cidr !== null) {
+                const networkPart = bin.substring(0, cidr);
+                const hostPart = bin.substring(cidr);
+                const formatPart = (part) => part.match(/.{1,8}/g)?.join(' ') || '';
+                
+                const networkHtml = `<span class="text-indigo-600 font-bold">${formatPart(networkPart)}</span>`;
+                const hostHtml = `<span class="text-red-500">${formatPart(hostPart)}</span>`;
+
+                return networkHtml + hostHtml;
+            }
+            return bin.match(/.{1,8}/g)?.join(' ') || '';
+        }
+
+        function isValidIp(ip) {
+            const parts = ip.split('.');
+            if (parts.length !== 4) return false;
+            return parts.every(part => {
+                const num = Number(part);
+                return !isNaN(num) && num >= 0 && num <= 255 && String(num) === part;
+            });
+        }
+
+        function simulateRouting() {
+            const localIp = document.getElementById('localIp').value.trim();
+            const cidrStr = document.getElementById('cidrPrefix').value.trim();
+            const defaultGateway = document.getElementById('defaultGateway').value.trim();
+            const destinationIp = document.getElementById('destinationIp').value.trim();
+            
+            const cidr = parseInt(cidrStr, 10);
+
+            if (!isValidIp(localIp) || !isValidIp(defaultGateway) || !isValidIp(destinationIp)) {
+                showError('Invalid IP Format', 'Please ensure all IP addresses are in the correct dotted-decimal format (e.g., 192.168.1.1).');
+                return;
+            }
+            if (isNaN(cidr) || cidr < 1 || cidr > 31) {
+                showError('Invalid CIDR Prefix', 'The CIDR prefix must be a number between 1 and 31 (e.g., 24).');
+                return;
+            }
+            
+            const localIpLong = ipToLong(localIp);
+            const destinationIpLong = ipToLong(destinationIp);
+            const maskLong = cidrToLongMask(cidr);
+            
+
+            const localNetIdLong = localIpLong & maskLong;
+            const destinationNetIdLong = destinationIpLong & maskLong;
+            
+            const localNetId = longToIp(localNetIdLong);
+            const destinationNetId = longToIp(destinationNetIdLong);
+            const subnetMask = longToIp(maskLong);
+
+
+            let status = '';
+            let explanation = '';
+            let statusColorClass = '';
+            
+            if (localNetIdLong === destinationNetIdLong) {
+
+                status = 'LOCAL TRAFFIC';
+                statusColorClass = 'text-green-600';
+                explanation = `Decision: The packet stays LOCAL(on-subnet routing). Since the Network IDs match, the device uses the Address Resolution Protocol (ARP) to find the destination's MAC address and sends the packet directly via the local interface (e.g., Wi-Fi card).`;
+            } else {
+                status = 'EXTERNAL TRAFFIC';
+                statusColorClass = 'text-blue-600';
+                explanation = `Decision: The packet goes EXTERNAL (off-subnet routing). The packet is forwarded to the Default Gateway (${defaultGateway}). This router then becomes the "Traffic Cop" and makes the next routing decision on the wider internet.`;
+            }
+            
+  
+            updateResultsPanel(status, statusColorClass, explanation, subnetMask, cidr, localNetId, destinationNetId);
+      
+            updateBinaryVisualization(destinationIp, destinationNetId, destinationIpLong, maskLong, cidr, destinationNetIdLong);
+        }
+        function updateResultsPanel(status, statusColorClass, explanation, subnetMask, cidr, localNetId, destinationNetId) {
+            const resultsArea = document.getElementById('resultsArea');
+            const statusOutput = document.getElementById('statusOutput');
+            const decisionText = document.getElementById('decisionText');
+
+
+            resultsArea.className = `mt-8 p-6 rounded-xl border-4 transition-all duration-300 ${
+                status === 'LOCAL TRAFFIC' ? 'bg-green-50 border-green-400' : 'bg-blue-50 border-blue-400'
+            }`;
+            
+            statusOutput.textContent = status;
+            statusOutput.className = `text-lg font-bold ${statusColorClass}`;
+            
+            document.getElementById('subnetMaskOutput').textContent = `${subnetMask} /${cidr}`;
+            document.getElementById('localNetworkId').textContent = localNetId;
+            document.getElementById('destinationNetworkId').textContent = destinationNetId;
+            decisionText.innerHTML = explanation;
+        }
+
+        function updateBinaryVisualization(destinationIp, destinationNetId, destinationIpLong, maskLong, cidr, destinationNetIdLong) {
+            const binaryVisual = document.getElementById('binaryVisualization');
+            
+            const html = `
+                <div class="p-3 border-b border-yellow-200">
+                    <p class="font-bold text-gray-800">Destination IP (${destinationIp}):</p>
+                    <code class="binary-string">${longToBinaryString(destinationIpLong, cidr)}</code>
+                </div>
+                <div class="p-3 border-b border-yellow-200">
+                    <p class="font-bold text-gray-800">Subnet Mask (${longToIp(maskLong)} /${cidr}):</p>
+                    <code class="binary-string text-gray-900">${longToBinaryString(maskLong)}</code>
+                </div>
+                <div class="p-3 bg-yellow-100 rounded-b-lg">
+                    <p class="font-bold text-yellow-800">RESULT (Network ID: ${destinationNetId}):</p>
+                    <code class="binary-string text-purple-600 font-extrabold">${longToBinaryString(destinationNetIdLong)}</code>
+                    <p class="mt-2 text-xs text-yellow-700">
+                        <span class="text-indigo-600 font-bold">Network Part (first ${cidr} bits)</span> vs.
+                        <span class="text-red-500">Host Part (last ${32 - cidr} bits)</span>.
+                        Only the Network Part is used for the routing decision.
+                    </p>
+                </div>
+            `;
+            binaryVisual.innerHTML = html;
+        }
+        
+        function showError(title, message) {
+            const resultsArea = document.getElementById('resultsArea');
+            const statusOutput = document.getElementById('statusOutput');
+            const decisionText = document.getElementById('decisionText');
+            const binaryVisual = document.getElementById('binaryVisualization');
+            
+            resultsArea.className = 'mt-8 p-6 bg-red-100 rounded-xl border-4 border-red-400';
+            statusOutput.textContent = `ERROR: ${title}`;
+            statusOutput.className = 'text-lg font-bold text-red-600';
+            decisionText.textContent = message;
+            document.getElementById('subnetMaskOutput').textContent = 'N/A';
+            document.getElementById('localNetworkId').textContent = 'N/A';
+            document.getElementById('destinationNetworkId').textContent = 'N/A';
+            binaryVisual.innerHTML = `<p class="text-red-600">Cannot visualize due to input error.</p>`;
+        }
+
+        window.onload = simulateRouting; 
+    </script>
+</body>
+</html>
