@@ -1,10 +1,10 @@
-# 🌧️ Local Traffic Interceptor (ARP Spoofing Tool)
+# Local Traffic Interceptor (ARP Spoofing Tool)
 
 This project is a simple Python Command Line Interface (CLI) tool built to intercept network traffic between two devices on a local network (such as your home Wi-Fi). It demonstrates fundamental networking concepts like ARP, IP routing, and packet forwarding.
 
 ---
 
-## 💡 The Problem: Why Can't I See Other People's Traffic?
+##  The Problem: Why Can't I See Other People's Traffic?
 
 Normally, when you connect to a network, your computer only looks at data packets specifically addressed to its unique hardware ID (MAC Address). All other traffic is ignored by your network card.
 
@@ -14,11 +14,11 @@ We need a way to trick two devices (like a router and a phone) into sending all 
 
 ---
 
-## 🔑 The Solution: Trick the Network with ARP Spoofing
+##  The Solution: Trick the Network with ARP Spoofing
 
 The solution is to abuse a core, insecure mechanism of local networks called **ARP (Address Resolution Protocol)**.
 
-### 📘 Key Networking Concepts
+### Key Networking Concepts
 
 | Jargon Term | Simple Meaning | Why We Use It |
 
