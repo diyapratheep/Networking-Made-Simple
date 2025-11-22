@@ -13,3 +13,4 @@ A Python command-line application designed to diagnose network bottlenecks by pr
 
     -   Demonstrated proficiency in **network diagnostics** and **Layer 3 (IP) analysis** by creating a decisive, color-coded metric for operational health.
 
+![Alt text](traffic%20latency.png)
