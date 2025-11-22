@@ -78,6 +78,33 @@
         
         <!-- Results Section -->
         <div id="resultsArea" class="mt-8 p-6 bg-white rounded-xl border-4 border-dashed border-gray-300 transition-all duration-300">
+            <!-- Hop Visualization Section -->
+            <div class="w-full max-w-4xl bg-white shadow-2xl rounded-xl p-6 md:p-10 border border-gray-100 mt-8">
+                <h2 class="text-2xl font-extrabold text-gray-900 mb-3">🚧 Hop Visualization (Traceroute-style Prototype)</h2>
+                <p class="text-sm text-gray-600 mb-4">Visualizes a simulated path from your host to the destination. Animates per-hop traversal and shows basic per-hop info.</p>
+
+                <div class="md:flex gap-6">
+                    <div class="flex-1">
+                        <div class="border rounded p-3 bg-gray-50">
+                            <svg id="topologyCanvas" width="100%" height="220" viewBox="0 0 800 220" xmlns="http://www.w3.org/2000/svg"></svg>
+                        </div>
+                        <div class="flex items-center gap-2 mt-3">
+                            <button id="startTraceBtn" class="font-bold bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded">Start Trace</button>
+                            <button id="stepTraceBtn" class="font-bold bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded">Step</button>
+                            <button id="resetTraceBtn" class="font-bold bg-red-100 hover:bg-red-200 text-red-800 py-2 px-4 rounded">Reset</button>
+                            <label class="ml-4 text-sm text-gray-600">Speed</label>
+                            <input id="speedRange" type="range" min="0.2" max="3" step="0.1" value="1" class="ml-2">
+                        </div>
+                    </div>
+
+                    <div class="w-80">
+                        <div id="hopLog" class="h-52 overflow-auto p-3 border rounded bg-white"></div>
+                        <div class="mt-3 text-xs text-gray-500">Notes: This is a simulated traceroute visualization using your inputs; it does not perform real network probes.</div>
+                    </div>
+                </div>
+            </div>
+
+            <script src="hop_simulator.js"></script>
             <h2 class="text-2xl font-bold text-gray-700 mb-3">Result & Analysis</h2>
             
             <div id="statusContainer" class="p-3 mb-4 bg-gray-100 rounded-lg">
