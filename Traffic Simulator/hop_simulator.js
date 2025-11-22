@@ -1,6 +1,4 @@
-// hop_simulator.js
-// Simple traceroute-style hop visualization prototype
-// Depends on global helper functions in main.html (ipToLong, cidrToLongMask, longToIp)
+
 
 (function () {
     // Utility DOM references
