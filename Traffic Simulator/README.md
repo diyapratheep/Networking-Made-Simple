@@ -1,10 +1,10 @@
 Traffic Simulator --- Networking Made Simple
 ==========================================
-The Problem
+##The Problem
 -------------
-Gap: Networking ideas like hops, latency, and routing can be hard to picture.
-Result: Students and beginners often struggle to connect theory with what actually happens to packets.
-The Solution
+- Gap: Networking ideas like hops, latency, and routing can be hard to picture.
+- Result: Students and beginners often struggle to connect theory with what actually happens to packets.
+##The Solution
 ---------------
 Tool: A tiny traffic simulator that runs in your browser (or locally) to simulate packet hops.
 Approach: Visual + code example makes abstract concepts concrete: you can see how packets travel, where they wait, and how delays add up.
@@ -14,7 +14,7 @@ Approach: Visual + code example makes abstract concepts concrete: you can see h
 -   Learning: Understand hops, latency, queuing, and simple routing.
 -   Experimenting: Tweak values (delay, number of hops, packet rate) and see effects instantly.
 
-🔧 How It Works
+ How It Works
 ---------------
 -   Model: The simulator models a path of nodes (hops). Each packet moves from node to node.
 -   Timing: Each hop adds a delay; packets may queue if a node is busy.
@@ -23,7 +23,7 @@ Approach: Visual + code example makes abstract concepts concrete: you can see h
 -   Traffic Routing: The simulator distinguishes between local and external traffic based on destination IP addresses, demonstrating how networks route packets differently for internal vs. external destinations.
 
 
-🚀 Quick Start
+ Quick Start
 --------------
 
 1.  Open in browser: Double-click `main.html` or open it from your browser.
@@ -36,7 +36,7 @@ Approach: Visual + code example makes abstract concepts concrete: you can see h
 
 * * * * *
 
-🔬 Try It
+ Try It
 ---------
 
 -   What to change: Edit delay, hop count, or packet rate in `hop_simulator.js` to see different behaviors.
