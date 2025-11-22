@@ -10,7 +10,6 @@ Files added:
 Quick start (Windows PowerShell):
 
 ```powershell
-cd "e:\project\SR project\Networking-Made-Simple\Traffic Simulator"
 npm install
 npm start
 ```
