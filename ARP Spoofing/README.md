@@ -20,19 +20,15 @@ The solution is to abuse a core, insecure mechanism of local networks called **A
 
 ### Key Networking Concepts
 
-| Jargon Term | Simple Meaning | Why We Use It |
+| **ARP** | A protocol that maps an IP Address (e.g., 192.168.1.50) to a MAC Address (hardware ID).  It's easily tricked. We send fake ARP messages. 
 
-|------------|----------------|----------------|
+| **ARP Spoofing** | Sending false ARP messages to redirect traffic. We pretend: "I am the Router" to the phone, and "I am the Phone" to the router. 
 
-| **ARP** | A protocol that maps an IP Address (e.g., 192.168.1.50) to a MAC Address (hardware ID). | It's easily tricked. We send fake ARP messages. |
+| **IP Forwarding** | A setting in Linux that allows passing through packets not meant for this machine. Lets our machine act like a temporary router.
 
-| **ARP Spoofing** | Sending false ARP messages to redirect traffic. | We pretend: "I am the Router" to the phone, and "I am the Phone" to the router. |
+| **Promiscuous Mode** | Network card accepts all packets it sees. Ensures we capture redirected traffic. 
 
-| **IP Forwarding** | A setting in Linux that allows passing through packets not meant for this machine. | Lets our machine act like a temporary router. |
-
-| **Promiscuous Mode** | Network card accepts all packets it sees. | Ensures we capture redirected traffic. |
-
-| **Scapy** | Python library to create and analyze packets. | Used to craft fake ARP packets and sniff traffic. |
+| **Scapy** | Python library to create and analyze packets. Used to craft fake ARP packets and sniff traffic. 
 
 ---
 
